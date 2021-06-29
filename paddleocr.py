@@ -15,8 +15,8 @@
 import os
 import sys
 
-__dir__ = os.path.dirname(__file__)
-sys.path.append(os.path.join(__dir__, ''))
+__dir__ = os.path.dirname(__file__) #返回脚本路径
+sys.path.append(os.path.join(__dir__, ''))#将本地目录添加到环境变量的目录中
 
 import cv2
 import numpy as np
@@ -122,20 +122,20 @@ VERSION = '2.1'
 SUPPORT_REC_MODEL = ['CRNN']
 BASE_DIR = os.path.expanduser("~/.paddleocr/")
 
-
+#下载进度条（url，下载路径）
 def download_with_progressbar(url, save_path):
-    response = requests.get(url, stream=True)
-    total_size_in_bytes = int(response.headers.get('content-length', 0))
+    response = requests.get(url, stream=True) #respose包含从服务器返回的所有的相关资源。
+    total_size_in_bytes = int(response.headers.get('content-length', 0))#Headers对象中返回指定header的全部值
     block_size = 1024  # 1 Kibibyte
-    progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
-    with open(save_path, 'wb') as file:
-        for data in response.iter_content(block_size):
-            progress_bar.update(len(data))
-            file.write(data)
-    progress_bar.close()
+    progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)  #tqdm（iterator）
+    with open(save_path, 'wb') as file:   #二进制模式写打开
+        for data in response.iter_content(block_size):#遍历response.content
+            progress_bar.update(len(data))#更新迭代data
+            file.write(data) #写入到data
+    progress_bar.close()#关闭
     if total_size_in_bytes == 0 or progress_bar.n != total_size_in_bytes:
         logger.error("Something went wrong while downloading models")
-        sys.exit(0)
+        sys.exit(0)#退出程序
 
 
 def maybe_download(model_storage_directory, url):
